@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    {% include head-custom.html %}
+    {% seo %}
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      <header>
+        <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: "ZeroLag C++ Reference" }}</a></h1>
+        
+        <div class="navigation">
+          <nav>
+            <a href="{{ "/" | absolute_url }}">Home</a> |
+            <a href="{{ "/core" | absolute_url }}">Core C++</a> |
+            <a href="{{ "/stl" | absolute_url }}">STL Deep Dive</a> |
+            <a href="{{ "/modern" | absolute_url }}">Modern C++</a>
+          </nav>
+        </div>
+      </header>
+      
+      <main>
+        {{ content }}
+      </main>
+      
+      <footer>
+        <p>
+          <small>Maintained by <a href="https://github.com/sidmegh">sidmegh</a>.</small>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

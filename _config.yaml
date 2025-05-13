@@ -1,0 +1,15 @@
+title: ZeroLag C++ Reference
+description: A fast-access C++ cheatsheet for quick development
+theme: jekyll-theme-slate  # or your chosen theme
+
+# Navigation structure
+header_pages:
+  - core.md
+  - stl.md
+  - modern.md
+
+# Build settings
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+  toc_levels: 1..3

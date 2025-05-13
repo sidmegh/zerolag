@@ -1,0 +1,50 @@
+@import "{{ site.theme }}";
+
+/*Custom styling*/
+.navigation {
+  margin-bottom: 20px;
+}
+
+.navigation a {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.navigation a:hover {
+  background-color: #e0e0e0;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 1.5em;
+}
+
+/* Table styling*/
+table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+/* Code blocks*/
+code {
+  padding: 0.2em 0.4em;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 85%;
+}
+
+pre {
+  padding: 16px;
+  overflow: auto;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
