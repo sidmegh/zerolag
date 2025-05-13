@@ -68,6 +68,16 @@ $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
+// Glass style mixin for reuse
+@mixin glassmorphic {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: $border-radius-md;
+}
+
 // ==========================================================================
 // --- 2. BASE STYLES & RESETS ---
 // ==========================================================================
@@ -190,9 +200,8 @@ ul, ol {
 }
 
 .site-header {
-  background-color: $color-bg-header;
-  border-bottom: 3px solid $color-primary;
-  box-shadow: $box-shadow-sm;
+  @include glassmorphic; 
+  border-bottom: 3px solid $color-primary; 
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -239,6 +248,7 @@ ul, ol {
 }
 
 .sidebar {
+  @include glassmorphic;
   width: 260px;
   padding-left: $spacing-unit;
   margin-top: $spacing-unit * 1.5;
@@ -329,13 +339,14 @@ ul, ol {
   }
 
   .sidebar {
+    @include glassmorphic;
     width: 100%;
     position: static;
     height: auto;
     overflow-y: visible;
     margin-top: $spacing-unit;
     padding-left: 0;
-    border-top: 1px solid $color-border;
+    border-top: 1px solid $color-border; 
     padding-top: $spacing-unit;
   }
 }
@@ -492,63 +503,43 @@ ul, ol {
 
 // Callouts for notes, warnings, etc.
 .callout {
-  padding: $spacing-unit;
-  margin-bottom: $spacing-unit * 1.5;
-  border: 1px solid transparent;
+  @include glassmorphic;
   border-radius: $border-radius-sm;
   border-left-width: 4px;
   position: relative;
+  padding: $spacing-unit; // General padding
+  margin-bottom: $spacing-unit * 1.5;
 
   &::before {
     position: absolute;
     top: $spacing-unit;
-    left: $spacing-unit;
+    left: $spacing-unit; // Consider adjusting if padding-left is significantly changed by variants
     font-weight: 700;
     font-size: $font-size-sm;
   }
 
   &.info {
-    background-color: rgba($color-primary, 0.05);
-    border-left-color: $color-primary;
+    background-color: rgba($color-primary, 0.05);                                                
+    border-left-color: $color-primary;           
     padding-left: $spacing-unit * 2.5;
-    
-    &::before {
-      content: 'Info:';
-      color: $color-primary;
-    }
   }
 
   &.warning {
     background-color: rgba($color-warning, 0.05);
     border-left-color: $color-warning;
     padding-left: $spacing-unit * 2.5;
-    
-    &::before {
-      content: 'Warning:';
-      color: $color-warning;
-    }
   }
 
   &.note {
     background-color: rgba($color-secondary, 0.05);
     border-left-color: $color-secondary;
     padding-left: $spacing-unit * 2.5;
-    
-    &::before {
-      content: 'Note:';
-      color: $color-secondary;
-    }
   }
 
   &.cpp-version {
     background-color: rgba($color-accent, 0.05);
     border-left-color: $color-accent;
     padding-left: $spacing-unit * 2.5;
-    
-    &::before {
-      content: 'C++ Version:';
-      color: $color-accent;
-    }
   }
 }
 

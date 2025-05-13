@@ -1,6 +1,6 @@
 ---
 layout: default
-title: STL
+title: Standard Library
 permalink: /stl/
 ---
 
