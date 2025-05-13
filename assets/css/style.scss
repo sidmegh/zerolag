@@ -1,50 +1,832 @@
-@import "{{ site.theme }}";
+---
+---
+// ==========================================================================
+// --- 1. VARIABLES ---
+// ==========================================================================
 
-/*Custom styling*/
-.navigation {
-  margin-bottom: 20px;
+// COLOR PALETTE - C++ themed
+$color-cpp-blue: #0076c0;       // Main C++ blue
+$color-cpp-dark: #004482;       // Darker blue for contrast
+$color-cpp-light: #e6f3fb;      // Light blue for backgrounds
+$color-cpp-accent: #f34b7d;     // C++ pink/red accent (from GitHub language color)
+$color-cpp-secondary: #6d6d6d;  // Neutral secondary color
+
+// Functional colors
+$color-primary: $color-cpp-blue;
+$color-secondary: $color-cpp-secondary;
+$color-accent: $color-cpp-accent;
+$color-danger: #d62c2c;
+$color-warning: #e8a100;
+$color-success: #2ca05a;
+
+// Text colors
+$color-text: #333333;
+$color-text-light: #555555;
+$color-text-dark: #1a1a1a;
+$color-text-muted: #777777;
+$color-text-code: #f8f8f8;
+
+// Background colors
+$color-bg-body: #fcfcfc;
+$color-bg-header: #ffffff;
+$color-bg-code: #282c34;        // VS Code-like dark theme
+$color-bg-footer: #2c3e50;
+$color-bg-highlight: #fff8dc;   // Light yellow for highlighted sections
+$color-border: #e3e3e3;
+
+// Table colors
+$color-table-header-bg: #f5f5f5;
+$color-table-border: #dddddd;
+$color-table-row-even-bg: #fafafa;
+
+// Typography
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-family-monospace: "Consolas", "Source Code Pro", "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+$font-family-headings: $font-family-sans-serif;
+
+$font-size-base: 1rem;
+$font-size-sm: 0.875rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$line-height-base: 1.6;
+$line-height-code: 1.5;
+$line-height-headings: 1.3;
+
+// Spacing
+$spacing-unit: 1rem;
+$header-height: 60px;
+
+// Borders & Shadows
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.375rem;
+$box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+$box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// ==========================================================================
+// --- 2. BASE STYLES & RESETS ---
+// ==========================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.navigation a {
-  margin-right: 10px;
-  padding: 5px 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
+html {
+  font-size: 100%;
+  scroll-padding-top: calc(#{$header-height} + #{$spacing-unit});
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: $font-family-sans-serif;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $color-text;
+  background-color: $color-bg-body;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+  margin-top: $spacing-unit * 2;
+  margin-bottom: $spacing-unit;
+  font-family: $font-family-headings;
+  font-weight: 600;
+  line-height: $line-height-headings;
+  color: $color-text-dark;
+}
+
+h1 { 
+  font-size: $font-size-base * 2.25; 
+  padding-bottom: $spacing-unit * 0.5;
+  border-bottom: 2px solid $color-primary;
+  color: $color-cpp-dark;
+}
+
+h2 { 
+  font-size: $font-size-base * 1.75; 
+  padding-bottom: $spacing-unit * 0.25;
+  border-bottom: 1px solid lighten($color-primary, 30%);
+}
+
+h3 { font-size: $font-size-base * 1.5; }
+h4 { font-size: $font-size-base * 1.25; }
+h5 { 
+  font-size: $font-size-base; 
+  color: $color-primary;
+  font-weight: 700;
+}
+h6 { 
+  font-size: $font-size-sm; 
+  color: $color-secondary;
+  font-weight: 700;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: $spacing-unit;
+}
+
+a {
+  color: $color-primary;
   text-decoration: none;
+  transition: color 0.15s ease-in-out;
+
+  &:hover {
+    color: darken($color-primary, 15%);
+    text-decoration: underline;
+  }
 }
 
-.navigation a:hover {
-  background-color: #e0e0e0;
+img, svg {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
 }
 
-h1, h2, h3, h4 {
-  margin-top: 1.5em;
+hr {
+  margin: $spacing-unit * 2 0;
+  border: 0;
+  border-top: 1px solid $color-border;
 }
 
-/* Table styling*/
-table {
-  display: block;
+// Lists
+ul, ol {
+  padding-left: $spacing-unit * 1.5;
+  margin-top: 0;
+  margin-bottom: $spacing-unit;
+
+  ul, ol {
+    margin-bottom: 0;
+  }
+}
+
+// ==========================================================================
+// --- 3. LAYOUT ---
+// ==========================================================================
+
+.site-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-container {
   width: 100%;
-  overflow: auto;
+  max-width: $breakpoint-lg;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-unit;
+  padding-left: $spacing-unit;
+}
+
+.site-header {
+  background-color: $color-bg-header;
+  border-bottom: 3px solid $color-primary;
+  box-shadow: $box-shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: $header-height;
+
+  .site-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .site-title {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-primary;
+    letter-spacing: -0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '<>';
+      margin-right: 8px;
+      font-family: $font-family-monospace;
+      color: $color-accent;
+      font-weight: 700;
+    }
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.site-content {
+  flex: 1;
+  padding: $spacing-unit * 1.5 0;
+
+  &.main-column {
+    padding-right: $spacing-unit * 1.5;
+  }
+}
+
+.sidebar {
+  width: 260px;
+  padding-left: $spacing-unit;
+  margin-top: $spacing-unit * 1.5;
+  position: sticky;
+  top: calc(#{$header-height} + #{$spacing-unit});
+  height: calc(100vh - #{$header-height} - #{$spacing-unit * 2});
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: $color-primary $color-cpp-light;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $color-cpp-light;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-primary;
+    border-radius: 20px;
+  }
+
+  h3 {
+    font-size: $font-size-base;
+    margin-top: 0;
+    color: $color-secondary;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    padding-bottom: $spacing-unit * 0.5;
+    border-bottom: 1px solid $color-border;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: $font-size-sm;
+
+    li {
+      margin-bottom: $spacing-unit / 4;
+    }
+
+    a {
+      color: $color-text;
+      text-decoration: none;
+      display: block;
+      padding: ($spacing-unit / 4) ($spacing-unit / 2);
+      border-radius: $border-radius-sm;
+      border-left: 2px solid transparent;
+
+      &:hover {
+        background-color: rgba($color-primary, 0.05);
+        color: $color-primary;
+        border-left-color: lighten($color-primary, 20%);
+      }
+
+      &.active-toc-link {
+        background-color: rgba($color-primary, 0.1);
+        color: $color-primary;
+        border-left-color: $color-primary;
+        font-weight: 600;
+      }
+    }
+
+    ul {
+      padding-left: $spacing-unit * 0.75;
+      margin-top: $spacing-unit / 4;
+
+      a {
+        font-size: $font-size-sm * 0.95;
+        padding-top: ($spacing-unit / 6);
+        padding-bottom: ($spacing-unit / 6);
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .site-content {
+    &.main-column {
+      padding-right: 0;
+    }
+  }
+
+  .sidebar {
+    width: 100%;
+    position: static;
+    height: auto;
+    overflow-y: visible;
+    margin-top: $spacing-unit;
+    padding-left: 0;
+    border-top: 1px solid $color-border;
+    padding-top: $spacing-unit;
+  }
+}
+
+.site-footer {
+  background-color: $color-bg-footer;
+  color: rgba(255, 255, 255, 0.7);
+  padding: $spacing-unit * 1.5 0;
+  text-align: center;
+  font-size: $font-size-sm;
+  margin-top: auto;
+
+  a {
+    color: rgba(255, 255, 255, 0.9);
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+// ==========================================================================
+// --- 4. NAVIGATION ---
+// ==========================================================================
+
+.main-nav {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+
+  li {
+    margin-left: $spacing-unit;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .nav-link {
+    display: block;
+    padding: ($spacing-unit * 0.35) ($spacing-unit * 0.5);
+    color: $color-text;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: $border-radius-sm;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; 
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background-color: $color-accent;
+      transition: all 0.2s ease;
+      transform: translateX(-50%);
+    }
+
+    &:hover {
+      color: $color-primary;
+      text-decoration: none;
+      
+      &::after {
+        width: 100%;
+      }
+    }
+
+    &.active {
+      color: $color-primary;
+      font-weight: 600;
+      
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-unit / 2;
+  
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: $color-primary;
+    margin-bottom: 4px;
+    transition: all 0.2s ease;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .main-nav {
+    display: none;
+    position: absolute;
+    top: $header-height;
+    left: 0;
+    right: 0;
+    background-color: $color-bg-header;
+    box-shadow: $box-shadow-md;
+
+    &.is-open {
+      display: block;
+    }
+
+    ul {
+      flex-direction: column;
+      width: 100%;
+      padding: $spacing-unit / 2;
+    }
+
+    li {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .nav-link {
+      padding: $spacing-unit * 0.75;
+      text-align: center;
+      border-bottom: 1px solid $color-border;
+      
+      &::after {
+        display: none;
+      }
+      
+      &:hover {
+        background-color: rgba($color-primary, 0.05);
+      }
+      
+      &.active {
+        background-color: rgba($color-primary, 0.1);
+      }
+    }
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+}
+
+// ==========================================================================
+// --- 5. COMPONENTS ---
+// ==========================================================================
+
+// Callouts for notes, warnings, etc.
+.callout {
+  padding: $spacing-unit;
+  margin-bottom: $spacing-unit * 1.5;
+  border: 1px solid transparent;
+  border-radius: $border-radius-sm;
+  border-left-width: 4px;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: $spacing-unit;
+    left: $spacing-unit;
+    font-weight: 700;
+    font-size: $font-size-sm;
+  }
+
+  &.info {
+    background-color: rgba($color-primary, 0.05);
+    border-left-color: $color-primary;
+    padding-left: $spacing-unit * 2.5;
+    
+    &::before {
+      content: 'Info:';
+      color: $color-primary;
+    }
+  }
+
+  &.warning {
+    background-color: rgba($color-warning, 0.05);
+    border-left-color: $color-warning;
+    padding-left: $spacing-unit * 2.5;
+    
+    &::before {
+      content: 'Warning:';
+      color: $color-warning;
+    }
+  }
+
+  &.note {
+    background-color: rgba($color-secondary, 0.05);
+    border-left-color: $color-secondary;
+    padding-left: $spacing-unit * 2.5;
+    
+    &::before {
+      content: 'Note:';
+      color: $color-secondary;
+    }
+  }
+
+  &.cpp-version {
+    background-color: rgba($color-accent, 0.05);
+    border-left-color: $color-accent;
+    padding-left: $spacing-unit * 2.5;
+    
+    &::before {
+      content: 'C++ Version:';
+      color: $color-accent;
+    }
+  }
+}
+
+// Tables - Essential for C++ reference
+table {
+  width: 100%;
+  margin-bottom: $spacing-unit * 1.5;
   border-collapse: collapse;
+  background-color: #fff;
+  font-size: $font-size-sm;
+  border: 1px solid $color-table-border;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  th, td {
+    padding: ($spacing-unit * 0.6);
+    vertical-align: top;
+    border: 1px solid $color-table-border;
+  }
+
+  thead th {
+    vertical-align: bottom;
+    background-color: $color-table-header-bg;
+    font-weight: 600;
+    color: $color-text-dark;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  // Zebra striping
+  tbody tr:nth-of-type(even) {
+    background-color: $color-table-row-even-bg;
+  }
+  
+  // Special treatment for function signatures
+  .signature {
+    font-family: $font-family-monospace;
+    white-space: nowrap;
+    font-size: 90%;
+    background-color: #fafafa;
+  }
+  
+  // C++ version column
+  .cpp-version {
+    white-space: nowrap;
+    text-align: center;
+    width: 90px;
+    font-size: 85%;
+  }
+  
+  // For showing prototype/return type
+  .return-type {
+    color: $color-secondary;
+    font-size: 90%;
+  }
 }
 
-table th, table td {
-  padding: 6px 13px;
-  border: 1px solid #dfe2e5;
-}
-
-/* Code blocks*/
+// Code Blocks - Critical for C++ cheatsheet
 code {
   padding: 0.2em 0.4em;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  margin: 0;
   font-size: 85%;
+  font-family: $font-family-monospace;
+  background-color: rgba($color-primary, 0.05);
+  color: $color-primary;
+  border-radius: $border-radius-sm;
 }
 
+// Syntax highlighting colors (minimal set)
+$syntax-keyword: #c678dd;    // Keywords like class, namespace
+$syntax-type: #e5c07b;       // Types like int, char
+$syntax-string: #98c379;     // String literals
+$syntax-comment: #7f848e;    // Comments
+$syntax-function: #61afef;   // Function names
+$syntax-variable: #e06c75;   // Variables
+$syntax-number: #d19a66;     // Numbers
+$syntax-operator: #56b6c2;   // Operators like +, -
+
 pre {
-  padding: 16px;
+  display: block;
+  padding: $spacing-unit;
+  margin: 0 0 $spacing-unit * 1.5;
+  font-size: 90%;
+  line-height: $line-height-code;
+  color: $color-text-code;
+  background-color: $color-bg-code;
+  border-radius: $border-radius-sm;
   overflow: auto;
-  line-height: 1.45;
-  background-color: #f6f8fa;
+  position: relative;
+
+  code {
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-radius: 0;
+    
+    // Basic syntax highlighting classes
+    .keyword { color: $syntax-keyword; }
+    .type { color: $syntax-type; }
+    .string { color: $syntax-string; }
+    .comment { color: $syntax-comment; }
+    .function { color: $syntax-function; }
+    .variable { color: $syntax-variable; }
+    .number { color: $syntax-number; }
+    .operator { color: $syntax-operator; }
+  }
+
+  // File path indicator (optional)
+  &[data-file]::before {
+    content: attr(data-file);
+    display: block;
+    background-color: darken($color-bg-code, 3%);
+    padding: ($spacing-unit / 3) $spacing-unit;
+    margin: -$spacing-unit;
+    margin-bottom: $spacing-unit / 2;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 85%;
+    font-family: $font-family-sans-serif;
+  }
+
+  // Copy button
+  .copy-code-button {
+    position: absolute;
+    top: $spacing-unit / 2;
+    right: $spacing-unit / 2;
+    padding: ($spacing-unit / 4) ($spacing-unit / 2);
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($color-primary, 0.5);
+    }
+  }
+}
+
+// Special C++ elements - for clearer code examples
+.cpp-example {
+  margin: $spacing-unit * 1.5 0;
+  
+  .title {
+    font-weight: 600;
+    margin-bottom: $spacing-unit / 2;
+    color: $color-text-dark;
+    display: flex;
+    align-items: center;
+    
+    &::before {
+      content: '//';
+      color: $color-accent;
+      margin-right: $spacing-unit / 2;
+      font-family: $font-family-monospace;
+    }
+  }
+  
+  // For showing output of code
+  .output {
+    margin-top: $spacing-unit / 2;
+    padding: $spacing-unit / 2 $spacing-unit;
+    background-color: #f5f5f5;
+    border-left: 3px solid $color-secondary;
+    font-family: $font-family-monospace;
+    white-space: pre-wrap;
+    font-size: 90%;
+    
+    &::before {
+      content: '// Output:';
+      display: block;
+      color: $color-secondary;
+      margin-bottom: $spacing-unit / 4;
+      font-weight: 600;
+    }
+  }
+}
+
+// ==========================================================================
+// --- 6. UTILITY CLASSES ---
+// ==========================================================================
+
+// Text utilities
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-muted { color: $color-text-muted !important; }
+.text-primary { color: $color-primary !important; }
+.text-accent { color: $color-accent !important; }
+
+// C++ version badges
+.cpp-badge {
+  display: inline-block;
+  padding: 2px 6px;
   border-radius: 3px;
+  font-size: 80%;
+  font-weight: 600;
+  margin-right: 4px;
+  
+  &.cpp11 { background-color: #5BC0EB; color: #fff; }
+  &.cpp14 { background-color: #FDE74C; color: #333; }
+  &.cpp17 { background-color: #9BC53D; color: #fff; }
+  &.cpp20 { background-color: #E55934; color: #fff; }
+  &.cpp23 { background-color: #FA7921; color: #fff; }
+}
+
+// Spacing utilities
+.mt-1 { margin-top: $spacing-unit * 0.25 !important; }
+.mt-2 { margin-top: $spacing-unit * 0.5 !important; }
+.mt-3 { margin-top: $spacing-unit !important; }
+.mt-4 { margin-top: $spacing-unit * 1.5 !important; }
+.mt-5 { margin-top: $spacing-unit * 3 !important; }
+
+.mb-1 { margin-bottom: $spacing-unit * 0.25 !important; }
+.mb-2 { margin-bottom: $spacing-unit * 0.5 !important; }
+.mb-3 { margin-bottom: $spacing-unit !important; }
+.mb-4 { margin-bottom: $spacing-unit * 1.5 !important; }
+.mb-5 { margin-bottom: $spacing-unit * 3 !important; }
+
+// ==========================================================================
+// --- 7. PRINT STYLES ---
+// ==========================================================================
+
+@media print {
+  body {
+    background-color: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .site-header, .site-footer, .sidebar, .nav-toggle, .copy-code-button {
+    display: none !important;
+  }
+
+  .site-container, .site-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #000;
+    &[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: 90%;
+    }
+  }
+
+  pre, code {
+    background-color: #f8f8f8 !important;
+    color: #333 !important;
+    border: 1px solid #ddd;
+    font-size: 9pt;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  table, th, td {
+    border-color: #ccc !important;
+  }
+  
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+  
+  table, figure {
+    page-break-inside: avoid;
+  }
 }
